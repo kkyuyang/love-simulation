@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>미소녀 연애 시뮬레이션</title>
+  <style>
+/* 공통 설정 */
+* {margin: 0;padding: 0;box-sizing: border-box;}
+
+/* 폰트 */
+@font-face {
+  font-family: 'DungGeunMo';
+  src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_six@1.2/DungGeunMo.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+
+body, html {
+  height: 100%;
+  width: 100%;
+  background: #008080;
+  font-family: 'Courier New', monospace;
+}
+
+/* 기본 창 구성 */
+.window-frame {
+  position: relative;
+  width: 800px;
+  height: 600px;
+  margin: 30px auto;
+  border: 3px solid #F7F7F7;
+  box-shadow: 8px 8px 0 #404040;
+  background: #c0c0c0;
+  display: flex;
+  flex-direction: column;
+}
+
+.title-bar {
+  background: #000080;
+  color: #fff;
+  padding: 6px 12px;
+  font: normal 12px 'DungGeunMo', monospace;
+}
+
+.content-area {
+  position: relative;
+  flex: 1;
+  overflow: hidden;
+}
+
+/* 배경 이미지 설정 */
+.blur-bg {
+  filter: blur(4px);
+  position: absolute;
+  max-height: 100%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  object-fit: contain;
+  z-index: 0;
+}
+
+.no-blur {
+  filter: none;
+  position: absolute;
+  max-height: 100%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  object-fit: contain;
+  z-index: 0;
+}
+
+/* 상태 패널 (호감도 등) */
+.status-panel {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background: rgba(0,0,0,0.5);
+  color: #fff;
+  padding: 8px 12px;
+  border: 1px solid #fff;
+  font: 14px/1.4 'DungGeunMo', monospace;
+  z-index: 10;
+  width: 160px;
+}
+
+.affection {
+  margin-top: 6px;
+  cursor: pointer;
+}
+
+.affection-bar {
+  width: 100%;
+  height: 8px;
+  background: #333;
+  border: 1px solid #aaa;
+  margin-top: 4px;
+}
+
+.affection-fill {
+  height: 100%;
+  background: #ff5e99;
+  transition: width 0.4s ease;
+}
+
+/* 호감도 설명 팝업 */
+.affection-info-window {
+  position: absolute;
+  top: 180px;
+  left: 20px;
+  width: 280px;
+  background: #c0c0c0;
+  border: 3px solid #808080;
+  box-shadow: 4px 4px 0 #404040;
+  font-family: 'DungGeunMo', monospace;
+  z-index: 20;
+}
+
+.popup-title {
+  background: #000080;
+  color: #fff;
+  padding: 4px 8px;
+  font: 14px 'DungGeunMo', monospace;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.popup-close {
+  cursor: pointer;
+}
+
+.popup-content {
+  padding: 12px;
+  background: #e0e0e0;
+  color: #000;
+  font: 13px 'DungGeunMo', monospace;
+}
+
+/* 캐릭터 이미지 */
+.character {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  height: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  z-index: 4;
+}
+
+/* 대화창 */
+.dialogue-box {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 120px; 
+  background: rgba(0,0,0,0.7);
+  color: #fff;
+  padding: 16px 20px;
+  font-size: 16px;
+  line-height: 1.5;
+  border-top: 2px solid #fff;
+  z-index: 10;
+  font-family: 'DungGeunMo', monospace;
+}
+
+.character-name {
+  font-weight: bold;
+  color: #0ff;
+  margin-bottom: 6px;
+}
+
+.next-button {
+  display: inline-block;
+  margin-top: 10px;
+  color: #ff0;
+  cursor: pointer;
+  font: bold 18px 'DungGeunMo', monospace;
+}
+
+/* 어두운 화면 연출 (컷신 등) */
+.dim-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.6);
+  z-index: 5;
+  display: none;
+}
+
+/* 선택지 박스 */
+#choiceBox {
+  display: none;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-family: 'DungGeunMo', monospace;
+  z-index: 30;
+  flex-direction: column;
+  gap: 12px;
+  align-items: center;
+}
+
+#choiceBox button {
+  padding: 12px 20px;
+  background: rgba(0, 0, 0, 0.7);
+  border: 2px solid #fff;
+  color: #fff;
+  font-family: 'DungGeunMo', monospace;
+  font-size: 16px;
+  cursor: pointer;
+  width: 300px;
+  text-align: center;
+  transition: background 0.2s;
+}
+
+#choiceBox button:hover {
+  background: rgba(0, 0, 0, 0.2);
+}
+
+/* 사이드 버튼 영역 (메모장 등) */
+.side-buttons {
+  position: fixed;
+  top: 10px;
+  left: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  z-index: 50;
+}
+
+.side-buttons button {
+  width: 60px;
+  background: transparent;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+.side-buttons img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+/* 메모장 팝업 */
+.notepad-popup {
+  position: absolute;
+  top: 80px;
+  left: 100px;
+  width: 320px;
+  background: #F7F7F7;
+  border: 3px solid #F7F7F7;
+  box-shadow: 4px 4px 0 #404040;
+  font-family: 'DungGeunMo', monospace;
+  z-index: 999;
+}
+
+.notepad-popup .popup-title {
+  background: #000080;
+  color: white;
+  padding: 6px 10px;
+  font-size: 14px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.notepad-popup .popup-close {
+  cursor: pointer;
+}
+
+.notepad-popup .popup-content {
+  padding: 12px;
+  background: #e0e0e0;
+  color: black;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+  </style>
+</head>
+<body>
+
+<!-- ⚙️ 사이드 버튼들 (좌측 고정) -->
+<div class="side-buttons">
+  <button onclick="location.href='info.html'"><img src="이미지/내컴퓨터.png" alt="내 컴퓨터"></button>
+  <button><img src="이미지/인터넷.png" alt="인터넷"></button>
+  <button><img src="이미지/메모장.png" alt="메모장"></button>
+  <button><img src="이미지/폴더.png" alt="폴더"></button>
+  <button onclick="location.href='home.html'"><img src="이미지/휴지통.png" alt="휴지통"></button>
+  <button onclick="location.href='index.html'"><img src="이미지/876.png" alt="876"></button>
+</div>
+
+<!-- 🖥 메인 게임 화면 -->
+<div class="window-frame">
+  <div class="title-bar">💾 류웨이 공략 시뮬레이션</div>
+  <div class="content-area">
+    <!-- 배경 이미지 -->
+    <img id="background" src="이미지/배경.png" class="blur-bg" alt="배경">
+
+    <!-- 캐릭터 이미지 -->
+    <img id="charImg" class="character" src="이미지/초기.png" alt="캐릭터">
+
+    <!-- 어두운 화면 오버레이 -->
+    <div id="dimOverlay" class="dim-overlay"></div>
+
+    <!-- 배경 음악 (숨김) -->
+    <iframe width="0" height="0" 
+      src="https://www.youtube.com/embed/wefAT9LZ_BM?autoplay=1&loop=1&playlist=wefAT9LZ_BM" 
+      frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+
+    <!-- 상태 표시 (날짜/호감도) -->
+    <div class="status-panel" id="statusPanel">
+      <div id="gameDate">7월 7일</div>
+      <div id="affection" class="affection">
+        호감도 ♥ <span id="affectionValue">5</span>
+        <div class="affection-bar">
+          <div id="affectionFill" class="affection-fill" style="width:5%"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 호감도 팝업 정보창 -->
+    <div id="affectionInfo" class="affection-info-window" style="display:none;">
+      <div class="popup-title">💬 호감도 정보 <span id="closeAffectionInfo" class="popup-close">X</span></div>
+      <div id="affectionInfoContent" class="popup-content"></div>
+    </div>
+
+    <!-- 대화창 -->
+    <div class="dialogue-box" id="dialogueBox">
+      <div id="charName" class="character-name">류웨이</div>
+      <div id="dialogueText" class="dialogue-text">시작 대사</div>
+      <div id="nextBtn" class="next-button">▼</div>
+    </div>
+
+    <!-- 선택지 박스 -->
+    <div id="choiceBox"></div>
+  </div>
+</div>
+
+  <!-- 📝 메모장 팝업 -->
+<div id="notepadPopup" class="notepad-popup" style="display:none;">
+  <div class="popup-title">📝 제목 없음 <span id="closeNotepad" class="popup-close">X</span></div>
+  <div class="popup-content">
+    내 컴퓨터를 누르면 캐릭터 정보를 확인.<br>
+    폴더를 누르면 앨범으로 이동.<br>
+    휴지통을 누르면 시뮬레이션 초기화.<br>
+    페어 아이콘을 누르면 메인 화면으로 돌아갑니다.
+  </div>
+</div>
+
+<!-- 스크립트 시작 -->
+<script>
+// 메모장 팝업 관련
+const notepadPopup = document.getElementById('notepadPopup');
+const closeNotepad = document.getElementById('closeNotepad');
+const memoBtn = document.querySelector('img[alt="메모장"]').parentElement;
+
+memoBtn.addEventListener('click', () => {
+  notepadPopup.style.display = 'block';
+});
+closeNotepad.addEventListener('click', () => {
+  notepadPopup.style.display = 'none';
+});
+
+// 기본 변수들
+let index = 0;
+let affection = 5;
+let choiceShown = false;
+
+// 대사 배열
+let dialogues = [
+  { name: '-', text: '초세계급 미래기관' },
+  { name: '-', text: '이곳은 내가 일하는 곳이다.' },
+  { name: '-', text: '모든 직장이 그렇듯 재밌는 일이라고는 단 하나도 생기지 않는다.' },
+  { name: '-', text: '절망이라도 구경하고 죽는다면 저승에서 할 얘기가 생길 텐데 말이다.' },
+  { name: '-', text: '지부장 님이 오셨나?', bg: '이미지/컷씬.png' },
+  { name: '-', text: '어려보이지만 저 여자는 9지부의 지부장, 류웨이.' },
+  { name: '-', text: '성년이 되기 전 도축업자로서 재능을 인정 받았고, 며칠 전 지부장 자리에 올랐다.' },
+  { name: '-', text: '지켜보니 확실히 리더 일에는 맞는 것 같은데, 역시 지부장이 되기엔 어리다.' },
+  { name: '-', text: '그 탓에 시기하는 사람도 있는 모양이고.' },
+  { name: '-', text: '지지 않고 맞대응은 하고 계신 것 같지만, 여러모로 힘드시겠지.' },
+  { name: '???', text: '… 뭐하고 있어?', bg: '이미지/배경.png', img: '이미지/초기.png', choice: true },
+];
+
+// 분기 시나리오들
+const branchA = [
+  { name: 'SYSTEM', text: '일순 그녀가 미간을 찌푸렸다.', img: '이미지/짜증.png' },
+  { name: '류웨이', text: '누굴 걱정할 위치라고 생각하는 건지.', img: '이미지/버럭.png' }, 
+  { name: '-', text: '이게 아닌데… 예민하네.' }, 
+  { name: '-', text: '확실히 지부장 자리에 오른 이후 스트레스를 받고 있는 모양이다.' },
+  { name: 'SYSTEM', text: '그 후로 괜히 찔 부린 것이 쪽팔렸던 류웨이는 주인공을 피해다니기 시작했다.',
+    img: '이미지/게임오버.png', end: true }
+];
+
+const branchB = [
+  { name: '-', text: '그녀는 잠시 놀란 얼굴로 나를 바라보았다.', img: '이미지/당황.png' },
+  { name: '류웨이', text: '아직 한 것도 없는데… 갑자기.', img: '이미지/당황.png' },
+  { name: '류웨이', text: '바라는 거라도 있나봐?', img: '이미지/부끄.png' },
+  { name: '-', text: '그래도 기분은 좋아보인다. 저런 말로 화제를 바꾸는 게 어린 티가 난다.' }, 
+  { name: '-', text: '지금은 편이 되어주는 사람이 간절할 테니까.' }, 
+  { name: '-', text: '나는 손사레를 치며 웃었다. 바라는 것은 없다면서.' }, 
+  { name: '-', text: '아직 지부 내에서 힘도 별로 없을 텐데 말이지.' }, 
+  { name: '류웨이', text: '바라는 것이 없다면 됐어. … 돌아가지.', img: '이미지/초기.png' },
+  { name: '-', text: '나는 간단하게 고개를 숙였다. 지부장은 지부장이니까.' }, 
+  { name: '-', text: '역시 아직은 나에 대해 아무런 생각도 없는 모양이다.' }, 
+  { name: '-', text: '다른 사람들과도 대화를 자주 하는 것 같지는 않다.' }, 
+  { name: '-', text: '아무리 그래도 외롭지는 않을까? … 괜한 참견이다.' }, 
+  { name: '-', text: '슬슬 퇴근이나 하자.' }, 
+
+  { name: 'SYSTEM', text: '― 다음 날, 7월 8일.', bg: '이미지/옥상.png', date: '7월 8일' },
+  { name: '-', text: '밤마다 영화나 한 편 보고 자는 이 일상이 지겹다.' }, 
+  { name: '-', text: '오늘도 출근해버렸고 말이지.' }, 
+  { name: '-', text: '담배를 피운 뒤에 일을 시작해보실까… 응?' }, 
+  { name: '-', text: '누군가 있는 모양이다. … 나는 왜 숨은 거지.' }, 
+  { name: '-', text: '목소리를 들어보니 지부장 님이 계신 듯하다.' }, 
+  { name: '-', text: '그리고… 처음 들어보는 목소리의 남자.' }, 
+  { name: '-', text: '분위기는 괜찮아 보이는데, 누구지?', choice: 'B1' }, 
+];
+
+const branchB1 = [
+  { name: '-', text: '끼어들어서 뭘 하겠다고… 숨어있다가 가자.' }, 
+  { name: '-', text: '휴대폰으로 게임이나 만지작거리고 있으니, 이내 두 사람이 문 근처로 다가오는 소리가 들렸다.' }, 
+  { name: '-', text: '윽… 잘못한 것도 없는데 왜 숨어야 하는 거야.' }, 
+  { name: '류웨이', text: '그러니까, 멋대로 아는 척은….' },
+  { name: '???', text: '그런 소리를 듣고 있는데 어떻게 조용히 있어요?' },
+  { name: '???', text: '나는 앞으로도 아는 척할 건데.' },
+  { name: '류웨이', text: '… 바보야! 됐어, 돌아가…. 연락할 테니까.' },
+  { name: '???', text: '정말이죠?' },
+  { name: '류웨이', text: '난 약속은 지키거드은… 먼저 가.' },
+  { name: '-', text: '싸우는 거였나? 그런 것치고….' }, 
+  { name: '-', text: '남성의 구두 소리가 멀어져가면, 지부장 님의 한숨 소리가 들려온다.' }, 
+  { name: '-', text: '… 앗. 이쪽을 보잖아.' }, 
+  { name: '-', text: '어색하게 손을 흔들어보았지만, 역효과였을까. 미묘한 표정으로 그녀가 내게 다가온다.' }, 
+  { name: '류웨이', text: '대화를 엿듣는 취미가 있는 줄 몰랐네.', img: '이미지/짜증.png' },
+  { name: '-', text: '어떡하지?', choice: 'B1_1' }, 
+];
+
+const branchB2 = [
+  { name: '류웨이', text: '…!?', img: '이미지/당황.png' },
+  { name: '-', text: '지부장 님과 처음 보는 장신의 남성은 다소 놀란 얼굴로 나를 바라보았다.', img: '이미지/당황.png' },
+  { name: '-', text: '노려보는 것만 같은 지부장 님의 얼굴은 기분탓인가….', img: '이미지/짜증.png' },
+  { name: '-', text: '하지만 남성은 금방 입에 미소를 걸고, 넉살 좋게 지부장 님께 손을 흔들어보였다.' },
+  { name: '-', text: '다음에 이야기해요. 그런 말도 빼놓지 않은 채 계단을 내려가는 모습.' },
+  { name: '-', text: '… 둘만 남겨두면 어떡하라는 건지. 어색한 분위기가 감돌았다.' },
+  { name: '류웨이', text: '대화를 엿듣는 취미가 있는 줄 몰랐네.', img: '이미지/짜증.png' },
+  { name: '-', text: '어떡하지?', choice: 'B1_1' }, 
+];
+
+const branchB1_1 = [
+  { name: '류웨이', text: '….', img: '이미지/초기.png' },
+  { name: '류웨이', text: '미안하기는… 오히려 괜히 화를 낸 것 같네. 사과하지.', img: '이미지/초기.png' },
+  { name: '류웨이', text: '다음에 답례할 테니까… 그러고보니, 옥상에는 왜?', img: '이미지/초기.png' },
+  { name: '류웨이', text: '흡연 구역은 2층에 있을 텐데.', img: '이미지/초기.png' },
+  { name: '-', text: '그곳은 이 시간에 늘 사람이 많으니까 말이다.' },
+  { name: '-', text: '지부장 님도 흡연자면서, 개인 사무실이 생겼다고 코빼기도 안 비추기 시작했지.' },
+  { name: '-', text: '저 같은 일반 사원도 여유를 즐길 시간이 필요하다고요!' },
+  { name: '-', text: '그런 말들을 정중하게 치환하여 내뱉고 나니, 지부장 님도 표정이 풀린 듯하다.' },
+  { name: '-', text: '저건 나름 웃고 계신 거겠지. 휴.' },
+  { name: '-', text: '… 함께 있었던 남성 분에 대해 물어볼 타이밍인가?' },
+  { name: '류웨이', text: '같이 있던 거, 누구냐고?', img: '이미지/당황.png' },
+  { name: '-', text: '궁금해 죽을 지경입니다.' },
+  { name: '류웨이', text: '… 그냥 아는 사람. 멍청이. 이런 게 왜 궁금한 거야….', img: '이미지/당황.png' },
+  { name: '-', text: '저런 말을 서슴 없이 내뱉는 것을 보면 친한 사이인 거겠지.' },
+  { name: '-', text: '말 조심하는 게 좋겠다.' },
+  { name: '-', text: '남자친구세요?' },
+  { name: '류웨이', text: '뭐, 뭣….', img: '이미지/당황.png' },
+  { name: '류웨이', text: '어딜 보고!? 죽고 싶어…!?', img: '이미지/혼미.png' },
+  { name: '-', text: '살해 협박까지…!?' },
+  { name: '-', text: '아무래도 정곡을 찌른 모양이다.' },
+];
+
+const branchB1_2 = [
+  { name: '류웨이', text: '….', img: '이미지/짜증.png' },
+  { name: '류웨이', text: '그래, 조심성이 없는 우리 잘못이었네.', img: '이미지/초기.png' },
+  { name: '류웨이', text: '미안… 이만 돌아가도록 하지.', img: '이미지/초기.png' },
+  { name: '-', text: '비꼬는 투가 역력한 것을 보니 화가 난 모양이다. 대체 어느 부분에서?' },
+  { name: '-', text: '저러니까 인복이 없지… 하는 생각이 들어오는 것은 잘못된 것일까.' },
+  { name: '-', text: '나는 옥상에 덩그라니 남아 담배를 태웠다. … 쓰다.' },
+  { name: '-', text: '그 뒤로도 의문의 남성과 지부장 님이 함께 있는 모습은 종종 목격되었다.' },
+  { name: '-', text: '남성의 이름은 하치쥬 나나. 일본에서 온 기관사라고 하는데….' },
+  { name: '-', text: '그 유명한 하치의 후계인 모양이다.' },
+  { name: '-', text: '젠장….' },
+  { name: 'SYSTEM', text: '류웨이는 그 뒤로 주인공이 어떤 이야기를 꺼낼지 몰라 사담을 일절 나누지 않았다고 한다.', img: '이미지/게임오버.png', end: true  },
+];
+  
+
+// 요소 가져오기
+const nameEl  = document.getElementById('charName');
+const textEl  = document.getElementById('dialogueText');
+const imgEl   = document.getElementById('charImg');
+const nextBtn = document.getElementById('nextBtn');
+const dimOv   = document.getElementById('dimOverlay');
+const choiceBox = document.getElementById('choiceBox');
+const affVal  = document.getElementById('affectionValue');
+const affFill = document.getElementById('affectionFill');
+const affBox  = document.getElementById('affection');
+const infoWin = document.getElementById('affectionInfo');
+const infoTxt = document.getElementById('affectionInfoContent');
+const infoX   = document.getElementById('closeAffectionInfo');
+const bgElement = document.getElementById('background');
+
+// 호감도 설명 반환
+function affectionMessage(v){
+  if(v >= 80) return '연인이라고 생각하는 중.';
+  if(v >= 50) return '좋아하는 사람이라고 생각하는 중.';
+  if(v >= 20) return '친구라고 생각하는 중.';
+  return '그저 아는 사람이라고 생각하는 중.';
+}
+
+// 호감도 UI 업데이트
+function updateAffectionUI(){
+  affVal.textContent = affection;
+  affFill.style.width = `${affection}%`;
+}
+
+function updateDialogue() {
+  const d = dialogues[index];
+  nameEl.textContent = d.name;
+  textEl.textContent = d.text;
+
+  // ✅ 캐릭터 이미지 처리
+  if (d.img) {
+    imgEl.src = d.img;
+    imgEl.style.display = 'block'; // 이미지 표시
+  } else {
+    imgEl.style.display = 'none';  // 이미지 숨김
+  }
+
+  // ✅ 날짜 업데이트
+  if (d.date) {
+    document.getElementById('gameDate').textContent = d.date;
+  }
+
+  // ✅ 어두운 화면 연출
+  dimOv.style.display = d.dim ? 'block' : 'none';
+
+
+  // ✅ 배경 이미지 변경
+  if (d.bg) {
+    bgElement.src = d.bg;
+
+    // 컷씬 배경인 경우 (파일명에 '컷씬'이 포함된 경우)
+    if (d.bg.includes('컷씬')) {
+      bgElement.classList.remove('blur-bg');
+      bgElement.classList.add('no-blur');
+    } else {
+      bgElement.classList.remove('no-blur');
+      bgElement.classList.add('blur-bg');
+    }
+  }
+
+  dimOv.style.display = d.dim ? 'block' : 'none';
+}
+
+// 선택지 표시 여부 판단
+function maybeShowChoice() {
+  const d = dialogues[index];
+  
+  if (d.choice === true) {
+    choiceBox.innerHTML = `
+      <button onclick="choose(-5, 'A')">웨이 씨, 뭔가 도와줄까?</button>
+      <button onclick="choose(10, 'B')">지부장 님, 늘 수고 많으시네요.</button>
+    `;
+    choiceBox.style.display = 'flex';
+    nextBtn.style.display = 'none';
+    choiceShown = true;
+    
+  } else if (d.choice === 'B1') {
+    choiceBox.innerHTML = `
+      <button onclick="choose(5, 'B1')">두 사람이 갈 때까지 기다린다.</button>
+      <button onclick="choose(-5, 'B2')">모습을 드러낸다.</button>
+    `;
+    choiceBox.style.display = 'flex';
+    nextBtn.style.display = 'none';
+    choiceShown = true;
+    
+  } else if (d.choice === 'B1_1') {
+    choiceBox.innerHTML = `
+      <button onclick="choose(5, 'B1_1')">죄송합니다. 두 분이 계신지 몰랐어요.</button>
+      <button onclick="choose(-10, 'B1_2')">듣고 싶어서 들은 게 아니에요….</button>
+    `;
+    choiceBox.style.display = 'flex';
+    nextBtn.style.display = 'none';
+    choiceShown = true;
+  }
+}
+
+// 선택지 처리
+function choose(delta, branch){
+  affection = Math.max(0, Math.min(100, affection + delta));
+  updateAffectionUI();
+  choiceBox.style.display = 'none';
+  nextBtn.style.display = 'block';
+  choiceShown = false;
+
+  if (branch === 'A')      dialogues = branchA;
+  else if (branch === 'B') dialogues = branchB;
+  else if (branch === 'B1') dialogues = branchB1;
+  else if (branch === 'B2') dialogues = branchB2;
+  else if (branch === 'B1_1') dialogues = branchB1_1;
+  else if (branch === 'B1_2') dialogues = branchB1_2;
+
+  index = 0;
+  updateDialogue();
+  maybeShowChoice();
+}
+
+// 다음 버튼 동작
+nextBtn.addEventListener('click', () => {
+  if (choiceShown) return;
+  index++;
+  if (index < dialogues.length) {
+    updateDialogue();
+    maybeShowChoice();
+  } else {
+    const d = dialogues[index - 1];
+    if (d.end) {
+      alert('배드 엔딩입니다. 다시 시도해보세요.');
+      location.reload();
+    } else {
+      alert('플레이해주셔서 감사합니다.');
+    }
+  }
+});
+
+// 호감도 박스 클릭 시 정보 팝업 표시
+affBox.addEventListener('click', ()=>{
+  infoTxt.innerHTML = `현재 호감도는 ${affection}입니다.<br>당신을 ${affectionMessage(affection)}`;
+  infoWin.style.display = 'block';
+});
+infoX.addEventListener('click', ()=> infoWin.style.display = 'none');
+
+// 초기 실행
+updateAffectionUI();
+updateDialogue();
+</script>
+
+</body>
+</html>
