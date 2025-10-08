@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>미연시 만들기</title>
+
+  <!-- 스타일 정의 -->
+  <style>
+    @font-face {
+      font-family: 'DungGeunMo';
+      src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_six@1.2/DungGeunMo.woff') format('woff');
+      font-weight: normal;
+      font-style: normal;
+    }
+
+    /* 전체 페이지 스타일 설정 */
+    body {
+      background-color: #008080;         /* 배경색: 청록색 */
+      color: #00ff00;                    /* 텍스트 기본색: 형광녹색 */
+      display: flex;                     /* 중앙 정렬을 위한 flex 사용 */
+      align-items: center;
+      justify-content: center;
+      height: 100vh;                     /* 전체 높이 */
+      margin: 0;
+    }
+
+    /* 💾 로딩창 스타일 */
+    .loading-window {
+      background-color: #c0c0c0;
+      border: 3px solid #F7F7F7;
+      width: 300px;
+      box-shadow: 5px 5px 0 #404040;
+      cursor: pointer;                  /* 클릭 가능하게 */
+    }
+
+    /* 윗부분 파란 타이틀 바 */
+    .title-bar {
+      background-color: #000080;
+      color: white;
+      padding: 6px 12px;
+      font-size: 16px;
+      font-family: 'DungGeunMo', monospace;
+    }
+
+    /* 로딩창 안의 내용 */
+    .content {
+      padding: 20px;
+      background-color: #e0e0e0;
+      color: black;
+      text-align: center;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .content p {
+      margin: 8px 0;
+    }
+
+    /* 🖥 왼쪽 고정 사이드 버튼들 */
+    .side-buttons {
+      position: fixed;
+      top: 10px;
+      left: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      z-index: 50;
+    }
+
+    .side-buttons button {
+      width: 60px;
+      background: transparent;
+      border: none;
+      padding: 0;
+      cursor: pointer;
+    }
+
+    .side-buttons img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    /* 메모장 팝업 스타일 */
+    .notepad-popup {
+      position: absolute;
+      top: 80px;
+      left: 100px;
+      width: 320px;
+      background: #F7F7F7;
+      border: 3px solid #F7F7F7;
+      box-shadow: 4px 4px 0 #404040;
+      font-family: 'DungGeunMo', monospace;
+      z-index: 999;
+    }
+
+    .notepad-popup .popup-title {
+      background: #000080;
+      color: white;
+      padding: 6px 10px;
+      font-size: 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .notepad-popup .popup-close {
+      cursor: pointer;
+    }
+
+    .notepad-popup .popup-content {
+      padding: 12px;
+      background: #e0e0e0;
+      color: black;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+  </style>
+</head>
+
+<body>
+
+<!-- 🖱 사이드 버튼들 (좌측 고정) -->
+<div class="side-buttons">
+  <button onclick="location.href='info.html'"><img src="이미지/내컴퓨터.png" alt="내 컴퓨터"></button>
+  <button><img src="이미지/인터넷.png" alt="인터넷"></button>
+  <button><img src="이미지/메모장.png" alt="메모장"></button>
+  <button><img src="이미지/폴더.png" alt="폴더"></button>
+  <button onclick="location.href='home.html'"><img src="이미지/휴지통.png" alt="휴지통"></button>
+  <button onclick="location.href='index.html'"><img src="이미지/876.png" alt="876"></button>
+</div>
+
+<!-- 🖥 로딩 창 내용 -->
+<div class="loading-window" id="loadingWindow">
+  <div class="title-bar">💾 LOADING.EXE</div>
+  <div class="content">
+    <p>시스템을 초기화하는 중입니다...</p>
+    <p>▼ 클릭하여 시작 ▼</p>
+  </div>
+</div>
+
+  <!-- 📝 메모장 팝업 -->
+<div id="notepadPopup" class="notepad-popup" style="display:none;">
+  <div class="popup-title">📝 제목 없음 <span id="closeNotepad" class="popup-close">X</span></div>
+  <div class="popup-content">
+    내 컴퓨터를 누르면 캐릭터 정보를 확인.<br>
+    폴더를 누르면 앨범으로 이동.<br>
+    휴지통을 누르면 시뮬레이션 초기화.<br>
+    페어 아이콘을 누르면 메인 화면으로 돌아갑니다.
+  </div>
+</div>
+
+  
+<script>
+  // 로딩 창 클릭 시 home.html로 이동
+  document.getElementById("loadingWindow").addEventListener("click", () => {
+    window.location.href = "home.html";
+  });
+
+  // 메모장 팝업 열고 닫기
+  const notepadPopup = document.getElementById('notepadPopup');
+  const closeNotepad = document.getElementById('closeNotepad');
+  const memoBtn = document.querySelector('img[alt="메모장"]').parentElement;
+
+  memoBtn.addEventListener('click', () => {
+    notepadPopup.style.display = 'block';
+  });
+
+  closeNotepad.addEventListener('click', () => {
+    notepadPopup.style.display = 'none';
+  });
+</script>
+
+</body>
+</html>
