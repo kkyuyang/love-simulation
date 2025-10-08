@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>캐릭터 정보</title>
+
+  <!-- 도트 글꼴을 불러오기 -->
+  <style>
+    @font-face {
+      font-family: 'DungGeunMo';
+      src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_six@1.2/DungGeunMo.woff') format('woff');
+      font-weight: normal;
+      font-style: normal;
+    }
+
+    /* 전체 페이지 스타일 설정 */
+    body, html {
+      height: 100%;
+      width: 100%;
+      background: #008080;
+      font-family: 'DungGeunMo', monospace; /* 픽셀 스타일 글꼴 */
+      color: black;
+      overflow-x: hidden;
+    }
+
+    /* 창 전체 테두리 및 배경 스타일 */
+.window-frame {
+  position: relative;
+  width: 800px;
+  height: 600px;
+  margin: 30px auto;
+  border: 3px solid #F7F7F7;
+  box-shadow: 8px 8px 0 #404040;
+  background: #c0c0c0;
+  display: flex;
+  flex-direction: column;
+}
+
+.title-bar {
+  background: #000080;
+  color: #fff;
+  padding: 6px 12px;
+  font: normal 12px 'DungGeunMo', monospace;
+}
+
+    /* 본문 내용 영역 (왼쪽 이미지 + 오른쪽 설명) */
+.content-area {
+  position: relative;
+  flex: 1;
+  display: flex;           /* 가로 배치를 위해 추가 */
+  align-items: flex-start; /* 위쪽 정렬 (선택 사항) */
+  gap: 24px;               /* 이미지와 텍스트 간격 */
+  padding: 20px;           /* 안쪽 여백 (선택 사항) */
+}
+
+    /* 캐릭터 이미지 설정 */
+    .character-image {
+      width: 300px;
+      height: auto;
+      object-fit: contain;
+    }
+
+    /* 오른쪽 설명 텍스트 박스 */
+    .details {
+      flex: 1;
+      overflow-y: auto;         /* 내용이 넘치면 스크롤 */
+      max-height: 520px;        /* 최대 높이 제한 */
+      padding-right: 10px;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    /* 정보 스타일링 */
+    .info-box {
+      flex: 1;
+      background: #e0e0e0;
+      padding: 16px;
+      border: 2px inset #fff;
+      font-size: 14px;
+      line-height: 1.7;
+    }
+
+    .info-box p {
+      margin: 6px 0;
+    }
+
+    /* 강조 텍스트 스타일 */
+    .highlight {
+      font-weight: bold;
+      color: #000080;
+    }
+
+    /* 인용구 스타일 */
+    .quote {
+      font-style: italic;
+      color: #444;
+      margin: 10px 0;
+    }
+
+    /* 화면 왼쪽 위 사이드 버튼들 */
+    .side-buttons {
+      position: fixed;
+      top: 10px;
+      left: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      z-index: 50;
+    }
+
+    /* 사이드 버튼 스타일 */
+    .side-buttons button {
+      width: 60px;
+      background: transparent;
+      border: none;
+      padding: 0;
+      cursor: pointer;
+    }
+
+    .side-buttons img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    /* 메모장 팝업 스타일 */
+    .notepad-popup {
+      position: absolute;
+      top: 80px;
+      left: 100px;
+      width: 320px;
+      background: #F7F7F7;
+      border: 3px solid #F7F7F7;
+      box-shadow: 4px 4px 0 #404040;
+      font-family: 'DungGeunMo', monospace;
+      z-index: 999;
+    }
+
+    .notepad-popup .popup-title {
+      background: #000080;
+      color: white;
+      padding: 6px 10px;
+      font-size: 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .notepad-popup .popup-close {
+      cursor: pointer;
+    }
+
+    .notepad-popup .popup-content {
+      padding: 12px;
+      background: #e0e0e0;
+      color: black;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+  </style>
+</head>
+
+  
+  
+<body>
+
+<div class="side-buttons">
+  <button onclick="location.href='info.html'"><img src="이미지/내컴퓨터.png" alt="내 컴퓨터"></button>
+  <button><img src="이미지/인터넷.png" alt="인터넷"></button>
+  <button><img src="이미지/메모장.png" alt="메모장"></button>
+  <button><img src="이미지/폴더.png" alt="폴더"></button>
+  <button onclick="location.href='home.html'"><img src="이미지/휴지통.png" alt="휴지통"></button>
+  <button onclick="location.href='index.html'"><img src="이미지/876.png" alt="876"></button>
+</div>
+
+<!-- 💾 캐릭터 정보 창 -->
+<div class="window-frame">
+  <div class="title-bar">📁 정보</div>
+  <div class="content-area">
+    <!-- 캐릭터 이미지 -->
+    <img src="이미지/초기.png" alt="류웨이" class="character-image">
+
+    <!-- 캐릭터 상세 정보 -->
+    <div class="details">
+      <h2><span class="highlight">이름</span> : 류웨이 (RYU WEI)</h2>
+      <p>"용건 있어?"</p>
+      <p><span class="highlight">생일</span> : 알 수 없음</p>
+      <p><span class="highlight">나이</span> : 26세</p>
+      <p><span class="highlight">성별</span> : 여성</p>
+      <p><span class="highlight">키</span> : 155cm</p>
+      <p><span class="highlight">몸무게</span> : 알 수 없음</p>
+      <p><span class="highlight">직업</span> : 도축업자</p>
+      <p><span class="highlight">능력치</span><br>
+        STR 60, CON 50, DEX 60, APP 50, LUK 40, INT 40
+      </p>
+      <p><span class="highlight">좋아하는 것</span> : 영화, 눈 오는 날</p>
+      <p><span class="highlight">싫어하는 것</span> : 향수 등</p>
+      <p><span class="highlight">배경 이야기</span><br>
+        초세계급 미래기관, 절망과 싸우는 게 일상이 된 세계에서, 감시와 통제 아래 두 사람이 조용히 마주친다.
+        정체불명의 기관사 하치쥬 나나는 언제나 웃고 있지만, 속엔 어두운 비밀을 안고 있고,
+        외곽 구역 도축업자인 류웨이는 조용히 자신의 일을 하고 있다.
+        진심을 쉽게 드러내지 않는 두 사람은 아주 우연히, 그리고 아주 조금씩 서로에게 스며들기 시작한다.
+      </p>
+      <p><span class="highlight">처음 만난 곳</span> : 초세계급 미래기관</p>
+      <p><span class="highlight">HINT</span> : 좋아하는 것에 대해 이야기 해보자.</p>
+    </div>
+  </div>
+</div>
+
+  <!-- 📝 메모장 팝업 -->
+<div id="notepadPopup" class="notepad-popup" style="display:none;">
+  <div class="popup-title">📝 제목 없음 <span id="closeNotepad" class="popup-close">X</span></div>
+  <div class="popup-content">
+    내 컴퓨터를 누르면 캐릭터 정보를 확인.<br>
+    폴더를 누르면 앨범으로 이동.<br>
+    휴지통을 누르면 시뮬레이션 초기화.<br>
+    페어 아이콘을 누르면 메인 화면으로 돌아갑니다.
+  </div>
+</div>
+
+  
+<script>
+  // 메모장 팝업 열고 닫기
+  const notepadPopup = document.getElementById('notepadPopup');
+  const closeNotepad = document.getElementById('closeNotepad');
+  const memoBtn = document.querySelector('img[alt="메모장"]').parentElement;
+
+  memoBtn.addEventListener('click', () => {
+    notepadPopup.style.display = 'block';
+  });
+
+  closeNotepad.addEventListener('click', () => {
+    notepadPopup.style.display = 'none';
+  });
+</script>
+
+</body>
+</html>
