@@ -317,7 +317,7 @@ body, html {
 
     <!-- 상태 표시 (날짜/호감도) -->
     <div class="status-panel" id="statusPanel">
-      <div id="gameDate">7월 7일</div>
+      <div id="gameDate">13월 7일</div>
       <div id="affection" class="affection">
         호감도 ♥ <span id="affectionValue">5</span>
         <div class="affection-bar">
@@ -334,7 +334,7 @@ body, html {
 
     <!-- 대화창 -->
     <div class="dialogue-box" id="dialogueBox">
-      <div id="charName" class="character-name">류웨이</div>
+      <div id="charName" class="character-name">양양</div>
       <div id="dialogueText" class="dialogue-text">시작 대사</div>
       <div id="nextBtn" class="next-button">▼</div>
     </div>
@@ -349,7 +349,6 @@ body, html {
   <div class="popup-title">📝 제목 없음 <span id="closeNotepad" class="popup-close">X</span></div>
   <div class="popup-content">
     내 컴퓨터를 누르면 캐릭터 정보를 확인.<br>
-    폴더를 누르면 앨범으로 이동.<br>
     휴지통을 누르면 시뮬레이션 초기화.<br>
     페어 아이콘을 누르면 메인 화면으로 돌아갑니다.
   </div>
@@ -508,10 +507,10 @@ const bgElement = document.getElementById('background');
 
 // 호감도 설명 반환
 function affectionMessage(v){
-  if(v >= 80) return '연인이라고 생각하는 중.';
-  if(v >= 50) return '좋아하는 사람이라고 생각하는 중.';
-  if(v >= 20) return '친구라고 생각하는 중.';
-  return '그저 아는 사람이라고 생각하는 중.';
+  if(v >= 80) return '사랑해서 주체하지 못하는 중.';
+  if(v >= 50) return '사랑스러운 연인이라고 생각하는 중.';
+  if(v >= 20) return '고마운 연인이라고 생각하는 중.';
+  return '그저 연인이라고 생각하는 중.';
 }
 
 // 호감도 UI 업데이트
