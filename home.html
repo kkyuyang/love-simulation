@@ -375,118 +375,83 @@ let choiceShown = false;
 
 // 대사 배열
 let dialogues = [
-  { name: '-', text: '초세계급 미래기관' },
-  { name: '-', text: '이곳은 내가 일하는 곳이다.' },
-  { name: '-', text: '모든 직장이 그렇듯 재밌는 일이라고는 단 하나도 생기지 않는다.' },
-  { name: '-', text: '절망이라도 구경하고 죽는다면 저승에서 할 얘기가 생길 텐데 말이다.' },
-  { name: '-', text: '지부장 님이 오셨나?', bg: '이미지/컷씬.png' },
-  { name: '-', text: '어려보이지만 저 여자는 9지부의 지부장, 류웨이.' },
-  { name: '-', text: '성년이 되기 전 도축업자로서 재능을 인정 받았고, 며칠 전 지부장 자리에 올랐다.' },
-  { name: '-', text: '지켜보니 확실히 리더 일에는 맞는 것 같은데, 역시 지부장이 되기엔 어리다.' },
-  { name: '-', text: '그 탓에 시기하는 사람도 있는 모양이고.' },
-  { name: '-', text: '지지 않고 맞대응은 하고 계신 것 같지만, 여러모로 힘드시겠지.' },
-  { name: '???', text: '… 뭐하고 있어?', bg: '이미지/배경.png', img: '이미지/초기.png', choice: true },
+  { name: '-', text: '평화로운 하늘 위' },
+  { name: '-', text: '약속 시간이 다 되었건만 통 오질 않는 악마 하나를 기다리는 중이다.' },
+  { name: '-', text: '평소에는 휴대용 통신기기로 곧잘 떠들어대더니 왜 이럴 때만 아무 소식이 없는지.' },
+  { name: '-', text: '답답했지만 통신기기로 먼저 말을 거는 건 내키지 않았다.' },
+  { name: '-', text: '이대로 오마에와 시간을 보내는 것도 좋았으니까.' },
+  { name: '-', text: '만지작 보들보들 쓰담쓰담 복복' },
+  { name: '-', text: '한참 손길을 따라 품속에서 꾸물거리던 오마에가 끝내 잠에 들려는 순간' },
+  { name: '??', text: '카라사키 님...---!!' },
+  { name: '-', text: '익숙한 목소리가 다급하게 이름을 부른다.' },
+  { name: '-', text: '… 어떻게 하지?', choice: true },
 ];
 
 // 분기 시나리오들
 const branchA = [
-  { name: 'SYSTEM', text: '일순 그녀가 미간을 찌푸렸다.', img: '이미지/짜증.png' },
-  { name: '류웨이', text: '누굴 걱정할 위치라고 생각하는 건지.', img: '이미지/버럭.png' }, 
-  { name: '-', text: '이게 아닌데… 예민하네.' }, 
-  { name: '-', text: '확실히 지부장 자리에 오른 이후 스트레스를 받고 있는 모양이다.' },
-  { name: 'SYSTEM', text: '그 후로 괜히 찔 부린 것이 쪽팔렸던 류웨이는 주인공을 피해다니기 시작했다.',
+  { name: '-', text: '약속에 늦었으면 재깍 올 것인지 어디서 부르는 건지.'},
+  { name: '-', text: '잠에서 깨버린 오마에를 어와 둥둥 달래주면서 기다리기로 했다.' },
+  { name: '-', text: '아이귀여워!'},
+  { name: 'SYSTEM', text: '그 후로 양양이는 당최 어디에 있는지 보이지 않았다.',
     img: '이미지/게임오버.png', end: true }
 ];
 
 const branchB = [
-  { name: '-', text: '그녀는 잠시 놀란 얼굴로 나를 바라보았다.', img: '이미지/당황.png' },
-  { name: '류웨이', text: '아직 한 것도 없는데… 갑자기.', img: '이미지/당황.png' },
-  { name: '류웨이', text: '바라는 거라도 있나봐?', img: '이미지/부끄.png' },
-  { name: '-', text: '그래도 기분은 좋아보인다. 저런 말로 화제를 바꾸는 게 어린 티가 난다.' }, 
-  { name: '-', text: '지금은 편이 되어주는 사람이 간절할 테니까.' }, 
-  { name: '-', text: '나는 손사레를 치며 웃었다. 바라는 것은 없다면서.' }, 
-  { name: '-', text: '아직 지부 내에서 힘도 별로 없을 텐데 말이지.' }, 
-  { name: '류웨이', text: '바라는 것이 없다면 됐어. … 돌아가지.', img: '이미지/초기.png' },
-  { name: '-', text: '나는 간단하게 고개를 숙였다. 지부장은 지부장이니까.' }, 
-  { name: '-', text: '역시 아직은 나에 대해 아무런 생각도 없는 모양이다.' }, 
-  { name: '-', text: '다른 사람들과도 대화를 자주 하는 것 같지는 않다.' }, 
-  { name: '-', text: '아무리 그래도 외롭지는 않을까? … 괜한 참견이다.' }, 
-  { name: '-', text: '슬슬 퇴근이나 하자.' }, 
-
-  { name: 'SYSTEM', text: '― 다음 날, 7월 8일.', bg: '이미지/옥상.png', date: '7월 8일' },
-  { name: '-', text: '밤마다 영화나 한 편 보고 자는 이 일상이 지겹다.' }, 
-  { name: '-', text: '오늘도 출근해버렸고 말이지.' }, 
-  { name: '-', text: '담배를 피운 뒤에 일을 시작해보실까… 응?' }, 
-  { name: '-', text: '누군가 있는 모양이다. … 나는 왜 숨은 거지.' }, 
-  { name: '-', text: '목소리를 들어보니 지부장 님이 계신 듯하다.' }, 
-  { name: '-', text: '그리고… 처음 들어보는 목소리의 남자.' }, 
-  { name: '-', text: '분위기는 괜찮아 보이는데, 누구지?', choice: 'B1' }, 
+  { name: '-', text: '일단 깨어난 오마에를 토닥이며 안아들고 다급한 목소리를 따라갔다.'},
+  { name: '-', text: '멀지 않은 곳에 익숙한 뱀이 마중을 나온 것처럼 앞에 나타났고,' },
+  { name: '-', text: '그 뒤로 주저 앉아있는 양양이 보였다.' }, 
+  { name: '양양', text: '카라사키 님, 카라사키 님인가요?', img: '이미지/눈물1.png' }, 
+  { name: '카라사키', text: '거기서 왜 그러고 있는 거냐.', img: '이미지/눈물1.png' },
+  { name: '양양', text: '큰일이에요...! 저, 눈을 잃어버렸다구요...!?', img: '이미지/눈물1.png' },
+  { name: '-', text: '양양의 눈이라 하면 이미 잃어버린지 오래 아니었나?', img: '이미지/눈물1.png' }, 
+  { name: '양양', text: '하늘 위 공기가 익숙하지 않았는지 흑흑이가 감기에 걸려서...', img: '이미지/눈물1.png' },
+  { name: '양양', text: '기침을 하다가 그만, 제 눈을 토해버렸어요...!', img: '이미지/눈물2.png' },
+  { name: '-', text: '황당한 이야기에 이마를 짚었다.', img: '이미지/눈물2.png' },
+  { name: '-', text: '뭐라고 위로해야 하지?.', img: '이미지/눈물2.png' choice: 'B1'}, 
 ];
 
 const branchB1 = [
-  { name: '-', text: '끼어들어서 뭘 하겠다고… 숨어있다가 가자.' }, 
-  { name: '-', text: '휴대폰으로 게임이나 만지작거리고 있으니, 이내 두 사람이 문 근처로 다가오는 소리가 들렸다.' }, 
-  { name: '-', text: '윽… 잘못한 것도 없는데 왜 숨어야 하는 거야.' }, 
-  { name: '류웨이', text: '그러니까, 멋대로 아는 척은….' },
-  { name: '???', text: '그런 소리를 듣고 있는데 어떻게 조용히 있어요?' },
-  { name: '???', text: '나는 앞으로도 아는 척할 건데.' },
-  { name: '류웨이', text: '… 바보야! 됐어, 돌아가…. 연락할 테니까.' },
-  { name: '???', text: '정말이죠?' },
-  { name: '류웨이', text: '난 약속은 지키거드은… 먼저 가.' },
-  { name: '-', text: '싸우는 거였나? 그런 것치고….' }, 
-  { name: '-', text: '남성의 구두 소리가 멀어져가면, 지부장 님의 한숨 소리가 들려온다.' }, 
-  { name: '-', text: '… 앗. 이쪽을 보잖아.' }, 
-  { name: '-', text: '어색하게 손을 흔들어보았지만, 역효과였을까. 미묘한 표정으로 그녀가 내게 다가온다.' }, 
-  { name: '류웨이', text: '대화를 엿듣는 취미가 있는 줄 몰랐네.', img: '이미지/짜증.png' },
-  { name: '-', text: '어떡하지?', choice: 'B1_1' }, 
+  { name: '양양', text: '정말인가요, 카라사키 님...?', img: '이미지/눈물1.png' }, 
+  { name: '카라사키', text: '당연한 걸 그렇게까지;', img: '이미지/눈물1.png' }, 
+  { name: '양양', text: '하지만 전 흑흑이가 눈을 잃어버린 이후로 아무것도 보이지 않게 됐으니까요...?', img: '이미지/눈물1.png' },
+  { name: '양양', text: '아무 도움도 드릴 수 없다구요...?', img: '이미지/눈물1.png' },
+  { name: '-', text: '어쩐지 그저 주저앉아 있더라니.' }, 
+  { name: '-', text: '이상한 시야에는 적응되었다고 해도 보이지 않는 건 다른 문제인가.' }, 
+  { name: '카라사키', text: '도움은 됐으니까 돌아가서 쉬어라.' },
+  { name: '카라사키', text: '집까지 같이 가지.' },
+  { name: '양양', text: '...', img: '이미지/눈물1.png' }, 
+  { name: '양양', text: '저 도움은 안 되겠지만', img: '이미지/눈물1.png' }, 
+  { name: '양양', text: '그냥 카라사키 님과 함께 있으면 안 될까요...?', img: '이미지/눈물1.png', choice: 'C' }, 
 ];
 
 const branchB2 = [
-  { name: '류웨이', text: '…!?', img: '이미지/당황.png' },
-  { name: '-', text: '지부장 님과 처음 보는 장신의 남성은 다소 놀란 얼굴로 나를 바라보았다.', img: '이미지/당황.png' },
-  { name: '-', text: '노려보는 것만 같은 지부장 님의 얼굴은 기분탓인가….', img: '이미지/짜증.png' },
-  { name: '-', text: '하지만 남성은 금방 입에 미소를 걸고, 넉살 좋게 지부장 님께 손을 흔들어보였다.' },
-  { name: '-', text: '다음에 이야기해요. 그런 말도 빼놓지 않은 채 계단을 내려가는 모습.' },
-  { name: '-', text: '… 둘만 남겨두면 어떡하라는 건지. 어색한 분위기가 감돌았다.' },
-  { name: '류웨이', text: '대화를 엿듣는 취미가 있는 줄 몰랐네.', img: '이미지/짜증.png' },
-  { name: '-', text: '어떡하지?', choice: 'B1_1' }, 
+  { name: '양양', text: '그게...', img: '이미지/눈물2.png' },
+  { name: '양양', text: '앞이 보이지 않는걸요...?', img: '이미지/눈물2.png' },
+  { name: '카라사키', text: '앞이?', img: '이미지/눈물2.png' },
+  { name: '양양', text: '흑흑이가 눈을 잃어버린 이후로 문제가 생긴 것 같아요...', img: '이미지/눈물2.png' },
+  { name: '-', text: '어쩐지 그저 주저앉아 있더라니.' }, 
+  { name: '-', text: '이상한 시야에는 적응되었다고 해도 보이지 않는 건 다른 문제인가.' }, 
+  { name: '카라사키', text: '눈은 내가 찾아볼 테니까 돌아가서 쉬어라.' },
+  { name: '카라사키', text: '집까지 같이 가지.' },
+  { name: '양양', text: '...', img: '이미지/눈물1.png' }, 
+  { name: '양양', text: '저 도움은 안 되겠지만', img: '이미지/눈물1.png' }, 
+  { name: '양양', text: '그냥 카라사키 님과 함께 있으면 안 될까요...?', img: '이미지/눈물1.png', choice: 'C' }, 
 ];
 
-const branchB1_1 = [
-  { name: '류웨이', text: '….', img: '이미지/초기.png' },
-  { name: '류웨이', text: '미안하기는… 오히려 괜히 화를 낸 것 같네. 사과하지.', img: '이미지/초기.png' },
-  { name: '류웨이', text: '다음에 답례할 테니까… 그러고보니, 옥상에는 왜?', img: '이미지/초기.png' },
-  { name: '류웨이', text: '흡연 구역은 2층에 있을 텐데.', img: '이미지/초기.png' },
-  { name: '-', text: '그곳은 이 시간에 늘 사람이 많으니까 말이다.' },
-  { name: '-', text: '지부장 님도 흡연자면서, 개인 사무실이 생겼다고 코빼기도 안 비추기 시작했지.' },
-  { name: '-', text: '저 같은 일반 사원도 여유를 즐길 시간이 필요하다고요!' },
-  { name: '-', text: '그런 말들을 정중하게 치환하여 내뱉고 나니, 지부장 님도 표정이 풀린 듯하다.' },
-  { name: '-', text: '저건 나름 웃고 계신 거겠지. 휴.' },
-  { name: '-', text: '… 함께 있었던 남성 분에 대해 물어볼 타이밍인가?' },
-  { name: '류웨이', text: '같이 있던 거, 누구냐고?', img: '이미지/당황.png' },
-  { name: '-', text: '궁금해 죽을 지경입니다.' },
-  { name: '류웨이', text: '… 그냥 아는 사람. 멍청이. 이런 게 왜 궁금한 거야….', img: '이미지/당황.png' },
-  { name: '-', text: '저런 말을 서슴 없이 내뱉는 것을 보면 친한 사이인 거겠지.' },
-  { name: '-', text: '말 조심하는 게 좋겠다.' },
-  { name: '-', text: '남자친구세요?' },
-  { name: '류웨이', text: '뭐, 뭣….', img: '이미지/당황.png' },
-  { name: '류웨이', text: '어딜 보고!? 죽고 싶어…!?', img: '이미지/혼미.png' },
-  { name: '-', text: '살해 협박까지…!?' },
-  { name: '-', text: '아무래도 정곡을 찌른 모양이다.' },
+const branchC1 = [
+  { name: '양양', text: '네...', img: '이미지/눈물1.png' },
+  { name: 'SYSTEM', text: '당신은 양양을 그의 집까지 바래다 주었다.' },
+  { name: 'SYSTEM', text: '눈에 민감하게 굴던 악마였으니 지금은 안정이 더 필요하다 판단했던 거였다.' }, 
+  { name: 'SYSTEM', text: '그 후 혼자서 양양의 눈을 찾아다녔으나 넓은 하늘을 전부 뒤지기엔 역부족이었다.',
+    img: '이미지/게임오버.png', end: true }
 ];
 
-const branchB1_2 = [
-  { name: '류웨이', text: '….', img: '이미지/짜증.png' },
-  { name: '류웨이', text: '그래, 조심성이 없는 우리 잘못이었네.', img: '이미지/초기.png' },
-  { name: '류웨이', text: '미안… 이만 돌아가도록 하지.', img: '이미지/초기.png' },
-  { name: '-', text: '비꼬는 투가 역력한 것을 보니 화가 난 모양이다. 대체 어느 부분에서?' },
-  { name: '-', text: '저러니까 인복이 없지… 하는 생각이 들어오는 것은 잘못된 것일까.' },
-  { name: '-', text: '나는 옥상에 덩그라니 남아 담배를 태웠다. … 쓰다.' },
-  { name: '-', text: '그 뒤로도 의문의 남성과 지부장 님이 함께 있는 모습은 종종 목격되었다.' },
-  { name: '-', text: '남성의 이름은 하치쥬 나나. 일본에서 온 기관사라고 하는데….' },
-  { name: '-', text: '그 유명한 하치의 후계인 모양이다.' },
-  { name: '-', text: '젠장….' },
-  { name: 'SYSTEM', text: '류웨이는 그 뒤로 주인공이 어떤 이야기를 꺼낼지 몰라 사담을 일절 나누지 않았다고 한다.', img: '이미지/게임오버.png', end: true  },
+const branchC2 = [
+  { name: '카라사키', text: '그래. 옆에 있어라. 네 눈인데 네가 더 잘 알겠지...', img: '이미지/눈물1.png' },
+  { name: '양양', text: '네...!', img: '이미지/웃음.png' },
+  { name: 'SYSTEM', text: '양양이 당신을 향해 손을 내밀었고, 당신은 그 손을 붙잡아 자리에서 일으켜 주었다.', img: '이미지/웃음.png' },
+  { name: '카라사키', text: '그럼 일단... 눈은 이 자리에서 잃어버린 거냐?', img: '이미지/웃음.png' },
+  { name: '양양', text: '맞아요. 하지만 흑흑이 뱉어버리면서 멀리 날아가버렸다고 생각해요.', img: '이미지/서운.png' },
 ];
   
 
@@ -564,26 +529,26 @@ function maybeShowChoice() {
   
   if (d.choice === true) {
     choiceBox.innerHTML = `
-      <button onclick="choose(-5, 'A')">웨이 씨, 뭔가 도와줄까?</button>
-      <button onclick="choose(10, 'B')">지부장 님, 늘 수고 많으시네요.</button>
+      <button onclick="choose(-5, 'A')">잠에서 깬 오마에를 달래준다.</button>
+      <button onclick="choose(10, 'B')">목소리의 출처를 찾아간다.</button>
     `;
     choiceBox.style.display = 'flex';
     nextBtn.style.display = 'none';
     choiceShown = true;
     
-  } else if (d.choice === 'B1') {
+   } else if (d.choice === 'B1') {
     choiceBox.innerHTML = `
-      <button onclick="choose(5, 'B1')">두 사람이 갈 때까지 기다린다.</button>
-      <button onclick="choose(-5, 'B2')">모습을 드러낸다.</button>
+      <button onclick="choose(5, 'B1')">찾아줄 테니까 진정해라.</button>
+      <button onclick="choose(-5, 'B2')">찾아야지 왜 주저앉아 있는 거냐.</button>
     `;
     choiceBox.style.display = 'flex';
     nextBtn.style.display = 'none';
     choiceShown = true;
     
-  } else if (d.choice === 'B1_1') {
+    } else if (d.choice === 'C') {
     choiceBox.innerHTML = `
-      <button onclick="choose(5, 'B1_1')">죄송합니다. 두 분이 계신지 몰랐어요.</button>
-      <button onclick="choose(-10, 'B1_2')">듣고 싶어서 들은 게 아니에요….</button>
+      <button onclick="choose(3, 'C1')">집에서 쉬는 게 안전할 거다...</button>
+      <button onclick="choose(5, 'C2')">양양이 도움이 될지도 모른다...</button>
     `;
     choiceBox.style.display = 'flex';
     nextBtn.style.display = 'none';
@@ -599,12 +564,12 @@ function choose(delta, branch){
   nextBtn.style.display = 'block';
   choiceShown = false;
 
-  if (branch === 'A')      dialogues = branchA;
+   if (branch === 'A')      dialogues = branchA;
   else if (branch === 'B') dialogues = branchB;
   else if (branch === 'B1') dialogues = branchB1;
   else if (branch === 'B2') dialogues = branchB2;
-  else if (branch === 'B1_1') dialogues = branchB1_1;
-  else if (branch === 'B1_2') dialogues = branchB1_2;
+  else if (branch === 'C1') dialogues = branchC1;
+  else if (branch === 'C2') dialogues = branchC2;
 
   index = 0;
   updateDialogue();
