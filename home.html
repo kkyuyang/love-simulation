@@ -453,6 +453,39 @@ const branchC2 = [
   { name: 'SYSTEM', text: '양양이 당신을 향해 손을 내밀었고, 당신은 그 손을 붙잡아 자리에서 일으켜 주었다.', img: '이미지/웃음.png' },
   { name: '카라사키', text: '그럼 일단... 눈은 이 자리에서 잃어버린 거냐?', img: '이미지/웃음.png' },
   { name: '양양', text: '맞아요. 하지만 흑흑이 뱉어버리면서 멀리 날아가버렸다고 생각해요.', img: '이미지/서운.png' },
+  { name: '-', text: '설마 구름 아래로 떨어져버린 건 아닐지, 까마득한 하늘 아래를 내려다본다.', bg: '이미지/배경1.png' },
+  { name: '-', text: '뱀도 여전히 주인의 눈을 대신하듯 함께 머리를 내밀어 보였다.' },
+  { name: '-', text: '그러더니 스스스- 소리를 내며 다리를 옭아매왔다.' },
+  { name: '카라사키', text: '...?' },
+  { name: '카라사키', text: '아, 새 때문인가.' },
+  { name: '-', text: '뱀은 다시 스-- 하는 소리를 낸다.' },
+  { name: '-', text: '단순히 새 때문에 놀랐다고 하기에는 더 큰 반응인데.' },
+  { name: '양양', text: '카라사키 님...? 흑흑이가 왜 그러는 거죠? 혹시 뭐라도 찾은 건가요?', img: '이미지/물음표.png' },
+  { name: '카라사키', text: '... 그래. 네 뱀이 뭔가 찾은 것 같다.', '이미지/물음표.png' },
+  { name: '양양', text: '역시 저의 흑흑이네요~', '이미지/웃음.png' },
+  { name: '카라사키', text: '그걸 내가 알아챈 거고', '이미지/웃음.png' },
+  { name: '양양', text: '역시 저의 카라사키 님이세요~', '이미지/웃음2.png' },
+  { name: '카라사키', text: '어쨌든...; 네 눈은 단순히 굴러 떨어진 게 아니다.', '이미지/물음표.png', choice: 'C3' },
+];
+
+const branchC3 = [
+  { name: '양양', text: '새요?', '이미지/물음표.png' },
+  { name: '카라사키', text: '이 근처에 반짝이는 걸 모아둔 둥지가 있다. 구름 끝쪽에 말이지.', '이미지/물음표.png' },
+  { name: '양양', text: '아앗... 그럼 제 눈이 그 새들의 보물 상자에 들어간 거군요?', '이미지/서운.png' },
+  { name: '양양', text: '어쩐지 귀엽네요. 제 눈이 새의 보물이 되다니~', '이미지/웃음.png' },
+  { name: '카라사키', text: '웃을 때냐 이녀석아', '이미지/웃음.png' },
+  { name: '양양', text: '웃을 수밖에 없는걸요? 카라사키 님과 있으면 일단 보이지 않아도 안심이니까요...~', '이미지/웃음2.png' },
+  { name: '양양', text: '그러니 제 눈을 찾을 때까지...', '이미지/웃음3.png' },
+  { name: '양양', text: '카라사키 님과 손을 잡고 다녀도 괜찮을까요?', '이미지/웃음3.png' },
+  { name: '카라사키', text: '...', '이미지/웃음3.png', choice: 'D' },
+];
+
+const branchD1 = [
+  { name: '양양', text: '제작예정', '이미지/물음표.png' },
+];
+
+const branchD2 = [
+  { name: '양양', text: '제작예정', '이미지/물음표.png' },
 ];
   
 
@@ -554,6 +587,22 @@ function maybeShowChoice() {
     choiceBox.style.display = 'flex';
     nextBtn.style.display = 'none';
     choiceShown = true;
+    } else if (d.choice === 'C3') {
+    choiceBox.innerHTML = `
+      <button onclick="choose(0, 'C3')">새들이 가져간 것 같아.</button>
+    `;
+    choiceBox.style.display = 'flex';
+    nextBtn.style.display = 'none';
+    choiceShown = true;
+    
+    } else if (d.choice === 'D') {
+    choiceBox.innerHTML = `
+      <button onclick="choose(5, 'D1')">옷을 잡으라고 한다.</button>
+      <button onclick="choose(10, 'D2')">양양의 손을 잡는다..</button>
+    `;
+    choiceBox.style.display = 'flex';
+    nextBtn.style.display = 'none';
+    choiceShown = true;
   }
 }
 
@@ -571,6 +620,9 @@ function choose(delta, branch){
   else if (branch === 'B2') dialogues = branchB2;
   else if (branch === 'C1') dialogues = branchC1;
   else if (branch === 'C2') dialogues = branchC2;
+  else if (branch === 'C3') dialogues = branchC3;
+  else if (branch === 'D1') dialogues = branchD1;
+  else if (branch === 'D2') dialogues = branchD2;
 
   index = 0;
   updateDialogue();
